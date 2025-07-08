@@ -1,0 +1,1480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokemon TCG Pocket Strategy Toolkit - Complete Competitive Analysis</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            min-height: 100vh;
+        }
+        
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        
+        .nav-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #e2e8f0;
+        }
+        
+        .nav-tab {
+            padding: 15px 25px;
+            background: #f7fafc;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            margin-right: 5px;
+            transition: all 0.3s;
+        }
+        
+        .nav-tab.active {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .nav-tab:hover:not(.active) {
+            background: #e2e8f0;
+        }
+        
+        .tool-section {
+            display: none;
+        }
+        
+        .tool-section.active {
+            display: block;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #4a5568;
+            margin-bottom: 10px;
+            font-size: 2.4em;
+        }
+        
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .section {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            border-left: 4px solid #4299e1;
+        }
+        
+        .input-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+        
+        input:focus, select:focus {
+            outline: none;
+            border-color: #4299e1;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin: 5px;
+        }
+        
+        .btn-primary {
+            background: #4299e1;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #3182ce;
+        }
+        
+        .btn-secondary {
+            background: #a0aec0;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #718096;
+        }
+        
+        .current-status {
+            background: #e6fffa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid #38b2ac;
+        }
+        
+        .status-large {
+            font-size: 1.8em;
+            font-weight: bold;
+            color: #2c7a7b;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .deck-counter {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .deck-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .counter-controls {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .counter-btn {
+            background: #4299e1;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        
+        .counter-btn:hover {
+            background: #3182ce;
+        }
+        
+        .counter-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2d3748;
+            min-width: 30px;
+        }
+        
+        .matchup-tracker {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .recommendation-section {
+            background: #e6fffa;
+            border: 2px solid #38b2ac;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+        
+        .recommendation-title {
+            color: #2c7a7b;
+            font-size: 1.4em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .deck-recommendations {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .deck-recommendation {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #48bb78;
+        }
+        
+        .deck-recommendation.best {
+            border-left-color: #38a169;
+            background: #f0fff4;
+        }
+        
+        .deck-recommendation.good {
+            border-left-color: #68d391;
+        }
+        
+        .deck-recommendation.okay {
+            border-left-color: #ed8936;
+        }
+        
+        .deck-recommendation.poor {
+            border-left-color: #f56565;
+        }
+        
+        .deck-rec-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+        
+        .deck-rec-score {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .matrix-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+        
+        .matrix-table th, .matrix-table td {
+            padding: 6px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .matrix-table th {
+            background: #4299e1;
+            color: white;
+            font-weight: 600;
+            font-size: 10px;
+        }
+        
+        .favorable {
+            background: #c6f6d5;
+            color: #22543d;
+            font-weight: bold;
+        }
+        
+        .even {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .unfavorable {
+            background: #fed7d7;
+            color: #742a2a;
+            font-weight: bold;
+        }
+        
+        .matrix-table td.editable {
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .matrix-table td.editable:hover {
+            background-color: #bee3f8 !important;
+        }
+        
+        .quick-start {
+            background: #f0f9ff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-left: 4px solid #4299e1;
+        }
+        
+        .quick-start-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid #e2e8f0;
+            margin-top: 40px;
+            color: #666;
+        }
+        
+        .deck-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+        
+        .deck-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e2e8f0;
+        }
+        
+        .deck-item input {
+            flex: 1;
+            padding: 6px;
+            border: 1px solid #e2e8f0;
+            border-radius: 3px;
+        }
+        
+        .matrix-table input {
+            width: 40px;
+            padding: 2px;
+            text-align: center;
+            border: 1px solid #4299e1;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎯 Pokemon TCG Pocket Strategy Toolkit</h1>
+        <p class="subtitle">
+            <strong>Complete Competitive Analysis</strong> • Optimal Stopping Algorithm • Tournament Data Integration • Customizable Sessions
+        </p>
+        
+        <div class="quick-start">
+            <h3 style="margin-top: 0; color: #1e40af;">🚀 Complete Strategy Toolkit</h3>
+            <div class="quick-start-grid">
+                <div>
+                    <strong>📊 Optimal Stopping</strong><br>
+                    <small>Mathematically determine WHEN to switch decks</small>
+                </div>
+                <div>
+                    <strong>🎯 Deck Selection</strong><br>
+                    <small>Analyze matchups to choose WHAT deck to play</small>
+                </div>
+                <div>
+                    <strong>⚙️ Full Customization</strong><br>
+                    <small>Edit deck names, matchups, and save configurations</small>
+                </div>
+                <div>
+                    <strong>📈 Meta Analysis</strong><br>
+                    <small>Track and counter your local competitive scene</small>
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-tabs">
+            <button class="nav-tab active" onclick="switchTool('stopping')">📊 Optimal Stopping</button>
+            <button class="nav-tab" onclick="switchTool('selector')">🎯 Deck Selector</button>
+        </div>
+        
+        <!-- OPTIMAL STOPPING TOOL -->
+        <div id="stopping-tool" class="tool-section active">
+            <div class="section">
+                <h3>📊 Optimal Stopping Algorithm - When to Switch Decks & Stop Playing</h3>
+                <p>Use mathematical optimal stopping theory to maximize your session points. Determine when to switch decks AND when to stop playing.</p>
+                
+                <div class="input-group">
+                    <div>
+                        <label for="maxGames">Max Games in Session:</label>
+                        <input type="number" id="maxGames" value="20" min="5" max="50" onchange="updateStoppingAnalysis()">
+                    </div>
+                    <div>
+                        <label for="currentGame">Current Game #:</label>
+                        <input type="number" id="currentGame" value="1" min="1" onchange="updateStoppingAnalysis()">
+                    </div>
+                    <div>
+                        <label for="gamesWithDeck">Games with Current Deck:</label>
+                        <input type="number" id="gamesWithDeck" value="1" min="1" onchange="updateStoppingAnalysis()">
+                    </div>
+                    <div>
+                        <label for="currentWins">Wins with Current Deck:</label>
+                        <input type="number" id="currentWins" value="0" min="0" onchange="updateStoppingAnalysis()">
+                    </div>
+                </div>
+                
+                <div class="input-group">
+                    <div>
+                        <label for="currentSessionPoints">Current Session Points:</label>
+                        <input type="number" id="currentSessionPoints" value="0" onchange="updateStoppingAnalysis()">
+                    </div>
+                    <div>
+                        <label for="currentWinStreak">Current Win Streak:</label>
+                        <input type="number" id="currentWinStreak" value="0" min="0" onchange="updateStoppingAnalysis()">
+                    </div>
+                    <div>
+                        <label for="expectedWinRate">Expected Win Rate (%):</label>
+                        <input type="number" id="expectedWinRate" value="60" min="0" max="100" step="5" onchange="updateStoppingAnalysis()">
+                    </div>
+                    <div></div>
+                </div>
+                
+                <div class="input-group">
+                    <div>
+                        <label for="currentWinStreak">Current Win Streak:</label>
+                        <input type="number" id="currentWinStreak" value="0" min="0" onchange="updateStoppingAnalysis()">
+                    </div>
+                    <div>
+                        <label for="expectedWinRate">Expected Win Rate (%):</label>
+                        <input type="number" id="expectedWinRate" value="60" min="0" max="100" step="5" onchange="updateStoppingAnalysis()">
+                    </div>
+                    <div>
+                        <label for="metaStability">Meta Stability:</label>
+                        <select id="metaStability" onchange="updateStoppingAnalysis()">
+                            <option value="stable">Stable Meta</option>
+                            <option value="mixed" selected>Mixed Meta</option>
+                            <option value="volatile">Volatile Meta</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="switchCost">Deck Switch Cost:</label>
+                        <select id="switchCost" onchange="updateStoppingAnalysis()">
+                            <option value="low" selected>Low (quick switch)</option>
+                            <option value="medium">Medium (need time)</option>
+                            <option value="high">High (mental reset needed)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 10px; margin: 15px 0;">
+                    <button class="btn btn-primary" onclick="recordWin()">✅ Record Win</button>
+                    <button class="btn btn-secondary" onclick="recordLoss()">❌ Record Loss</button>
+                    <button class="btn btn-secondary" onclick="resetSession()">🔄 Reset Session</button>
+                </div>
+            </div>
+            
+            <div class="current-status">
+                <h3>Session Status & Decisions</h3>
+                <div id="sessionStatus" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 15px;">
+                    <!-- Session stats will be populated here -->
+                </div>
+                <div id="stoppingStatus" class="status-large">Calculating...</div>
+                <div id="stoppingDetails"></div>
+            </div>
+            
+            <div class="section">
+                <h3>📈 Advanced Analysis</h3>
+                <div id="stoppingAnalysis"></div>
+                <div id="expectedValueAnalysis" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+        
+        <!-- DECK SELECTOR TOOL -->
+        <div id="selector-tool" class="tool-section">
+            <div class="section">
+                <h3>🎯 Deck Selection - What Deck to Play</h3>
+                <p>Track your matchups and get optimal deck recommendations based on your local meta.</p>
+                
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+                    <button class="btn btn-primary" onclick="analyzeMatchups()">📊 Analyze & Get Recommendations</button>
+                    <button class="btn btn-secondary" onclick="resetCounters()">🔄 Reset Counters</button>
+                    <button class="btn btn-primary" onclick="toggleEditMode()">✏️ Edit Mode</button>
+                    <button class="btn btn-secondary" onclick="exportData()">📤 Export Data</button>
+                    <button class="btn btn-secondary" onclick="importData()">📥 Import Data</button>
+                    <button class="btn btn-secondary" onclick="resetToDefaults()">🔄 Reset to Defaults</button>
+                    <button class="btn btn-secondary" onclick="showPersistenceInfo()" style="background: #059669;">💾 Persistence Info</button>
+                </div>
+                
+                <div id="editControls" style="display: none; background: #fff5f5; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f56565;">
+                    <h4>⚙️ Edit Mode Active</h4>
+                    <p><strong>Deck Editing:</strong> Rename decks using the controls below (removal disabled)</p>
+                    <p><strong>Matchup Editing:</strong> Click any percentage in the matrix to edit matchup rates</p>
+                    <button class="btn btn-primary" onclick="addNewDeck()">+ Add New Deck</button>
+                    <button class="btn btn-secondary" onclick="toggleEditMode()">Exit Edit Mode</button>
+                </div>
+                
+                <div id="dataStatus" style="margin: 15px 0; padding: 10px; border-radius: 6px; display: none;"></div>
+                
+                <h4>Track Today's Matchups:</h4>
+                <div class="matchup-tracker" id="matchupTracker">
+                    <!-- Deck counters will be populated by JavaScript -->
+                </div>
+            </div>
+            
+            <div class="recommendation-section" id="recommendationSection" style="display: none;">
+                <div class="recommendation-title">🎯 Recommended Deck Choices</div>
+                <div id="recommendationContent">
+                    <!-- Recommendations will be populated here -->
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3>📊 Customizable Matchup Matrix</h3>
+                <div id="matrixInstructions" style="margin-bottom: 15px; padding: 10px; background: #f0f9ff; border-radius: 6px; font-size: 14px;">
+                    <span id="matrixMode">View matchup percentages</span>
+                    <span id="dataSource" style="float: right; font-weight: bold; color: #16a34a;">🟢 DEFAULT: Built-in Data</span>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table class="matrix-table" id="matchupMatrix">
+                        <!-- Matrix will be populated by JavaScript -->
+                    </table>
+                </div>
+            </div>
+            
+            <div class="section" id="deckEditor" style="display: none;">
+                <h3>🎴 Deck List Editor</h3>
+                <div class="deck-list" id="deckList">
+                    <!-- Deck editing will be populated here -->
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p><strong>Pokemon TCG Pocket Complete Strategy Toolkit</strong></p>
+            <p style="font-size: 14px; margin: 8px 0;">
+                Optimal Stopping Algorithm • Customizable Deck Analysis • Matchup Matrix Editor
+            </p>
+            <p style="font-size: 12px; color: #888;">
+                Open source competitive analysis tools for Pokemon TCG Pocket
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        // 12 Meta Decks for Pokemon TCG Pocket (Fixed List)
+        const decks = {
+            'Pikachu ex': { color: '#FFD700' },
+            'Charizard ex': { color: '#FF6B35' },
+            'Mewtwo ex': { color: '#9D4EDD' },
+            'Starmie ex': { color: '#0077BE' },
+            'Articuno ex': { color: '#87CEEB' },
+            'Moltres ex': { color: '#DC143C' },
+            'Venusaur ex': { color: '#228B22' },
+            'Blastoise ex': { color: '#1E90FF' },
+            'Wigglytuff ex': { color: '#FFB6C1' },
+            'Machamp ex': { color: '#696969' },
+            'Gengar ex': { color: '#4B0082' },
+            'Alakazam ex': { color: '#DAA520' }
+        };
+        
+        // 12x12 Matchup Matrix
+        const matchupMatrix = {
+            'Pikachu ex': {
+                'Pikachu ex': 50, 'Charizard ex': 45, 'Mewtwo ex': 35, 'Starmie ex': 65,
+                'Articuno ex': 60, 'Moltres ex': 55, 'Venusaur ex': 70, 'Blastoise ex': 40,
+                'Wigglytuff ex': 55, 'Machamp ex': 60, 'Gengar ex': 50, 'Alakazam ex': 45
+            },
+            'Charizard ex': {
+                'Pikachu ex': 55, 'Charizard ex': 50, 'Mewtwo ex': 40, 'Starmie ex': 45,
+                'Articuno ex': 35, 'Moltres ex': 50, 'Venusaur ex': 75, 'Blastoise ex': 30,
+                'Wigglytuff ex': 65, 'Machamp ex': 50, 'Gengar ex': 55, 'Alakazam ex': 60
+            },
+            'Mewtwo ex': {
+                'Pikachu ex': 65, 'Charizard ex': 60, 'Mewtwo ex': 50, 'Starmie ex': 55,
+                'Articuno ex': 50, 'Moltres ex': 45, 'Venusaur ex': 40, 'Blastoise ex': 45,
+                'Wigglytuff ex': 70, 'Machamp ex': 75, 'Gengar ex': 45, 'Alakazam ex': 55
+            },
+            'Starmie ex': {
+                'Pikachu ex': 35, 'Charizard ex': 70, 'Mewtwo ex': 45, 'Starmie ex': 50,
+                'Articuno ex': 45, 'Moltres ex': 75, 'Venusaur ex': 25, 'Blastoise ex': 50,
+                'Wigglytuff ex': 60, 'Machamp ex': 70, 'Gengar ex': 55, 'Alakazam ex': 50
+            },
+            'Articuno ex': {
+                'Pikachu ex': 40, 'Charizard ex': 65, 'Mewtwo ex': 50, 'Starmie ex': 55,
+                'Articuno ex': 50, 'Moltres ex': 30, 'Venusaur ex': 70, 'Blastoise ex': 45,
+                'Wigglytuff ex': 55, 'Machamp ex': 60, 'Gengar ex': 50, 'Alakazam ex': 45
+            },
+            'Moltres ex': {
+                'Pikachu ex': 45, 'Charizard ex': 50, 'Mewtwo ex': 55, 'Starmie ex': 25,
+                'Articuno ex': 70, 'Moltres ex': 50, 'Venusaur ex': 80, 'Blastoise ex': 20,
+                'Wigglytuff ex': 60, 'Machamp ex': 55, 'Gengar ex': 50, 'Alakazam ex': 50
+            },
+            'Venusaur ex': {
+                'Pikachu ex': 30, 'Charizard ex': 25, 'Mewtwo ex': 60, 'Starmie ex': 75,
+                'Articuno ex': 30, 'Moltres ex': 20, 'Venusaur ex': 50, 'Blastoise ex': 70,
+                'Wigglytuff ex': 65, 'Machamp ex': 55, 'Gengar ex': 60, 'Alakazam ex': 55
+            },
+            'Blastoise ex': {
+                'Pikachu ex': 60, 'Charizard ex': 70, 'Mewtwo ex': 55, 'Starmie ex': 50,
+                'Articuno ex': 55, 'Moltres ex': 80, 'Venusaur ex': 30, 'Blastoise ex': 50,
+                'Wigglytuff ex': 50, 'Machamp ex': 45, 'Gengar ex': 45, 'Alakazam ex': 50
+            },
+            'Wigglytuff ex': {
+                'Pikachu ex': 45, 'Charizard ex': 35, 'Mewtwo ex': 30, 'Starmie ex': 40,
+                'Articuno ex': 45, 'Moltres ex': 40, 'Venusaur ex': 35, 'Blastoise ex': 50,
+                'Wigglytuff ex': 50, 'Machamp ex': 25, 'Gengar ex': 60, 'Alakazam ex': 65
+            },
+            'Machamp ex': {
+                'Pikachu ex': 40, 'Charizard ex': 50, 'Mewtwo ex': 25, 'Starmie ex': 30,
+                'Articuno ex': 40, 'Moltres ex': 45, 'Venusaur ex': 45, 'Blastoise ex': 55,
+                'Wigglytuff ex': 75, 'Machamp ex': 50, 'Gengar ex': 35, 'Alakazam ex': 70
+            },
+            'Gengar ex': {
+                'Pikachu ex': 50, 'Charizard ex': 45, 'Mewtwo ex': 55, 'Starmie ex': 45,
+                'Articuno ex': 50, 'Moltres ex': 50, 'Venusaur ex': 40, 'Blastoise ex': 55,
+                'Wigglytuff ex': 40, 'Machamp ex': 65, 'Gengar ex': 50, 'Alakazam ex': 60
+            },
+            'Alakazam ex': {
+                'Pikachu ex': 55, 'Charizard ex': 40, 'Mewtwo ex': 45, 'Starmie ex': 50,
+                'Articuno ex': 55, 'Moltres ex': 50, 'Venusaur ex': 45, 'Blastoise ex': 50,
+                'Wigglytuff ex': 35, 'Machamp ex': 30, 'Gengar ex': 40, 'Alakazam ex': 50
+            }
+        };
+        
+        let matchupCounts = {};
+        let editMode = false;
+        let customDecks = null;
+        let customMatrix = null;
+        
+        // PERSISTENCE FUNCTIONS - Hybrid localStorage + Manual Export/Import
+        function autoSaveData() {
+            try {
+                const dataToSave = {
+                    version: '2.1',
+                    autoSaveDate: new Date().toISOString(),
+                    customDecks: customDecks,
+                    customMatrix: customMatrix,
+                    matchupCounts: matchupCounts
+                };
+                localStorage.setItem('pokemonTCG_toolkit', JSON.stringify(dataToSave));
+            } catch(e) {
+                // Silently fail in environments without localStorage (like Claude.ai artifacts)
+                console.log('Auto-save not available in this environment');
+            }
+        }
+        
+        function autoLoadData() {
+            try {
+                const savedData = localStorage.getItem('pokemonTCG_toolkit');
+                if (savedData) {
+                    const parsed = JSON.parse(savedData);
+                    if (parsed.version && parsed.customDecks !== undefined) {
+                        customDecks = parsed.customDecks;
+                        customMatrix = parsed.customMatrix;
+                        matchupCounts = parsed.matchupCounts || {};
+                        return true;
+                    }
+                }
+            } catch(e) {
+                // Silently fail in environments without localStorage
+                console.log('Auto-load not available in this environment');
+            }
+            return false;
+        }
+        
+        function clearAutoSavedData() {
+            try {
+                localStorage.removeItem('pokemonTCG_toolkit');
+            } catch(e) {
+                // Silently fail
+            }
+        }
+        
+        function getCurrentDecks() {
+            return customDecks || decks;
+        }
+        
+        function getCurrentMatrix() {
+            return customMatrix || matchupMatrix;
+        }
+        
+        // Tool Navigation
+        function switchTool(toolName) {
+            // Hide all tools
+            document.querySelectorAll('.tool-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected tool
+            document.getElementById(toolName + '-tool').classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            // Initialize tools when switched to
+            if (toolName === 'stopping') {
+                updateStoppingAnalysis();
+            } else if (toolName === 'selector') {
+                initializeMatchupCounters();
+                initializeMatrix();
+                updateDataSourceDisplay();
+            }
+        }
+        
+        // OPTIMAL STOPPING FUNCTIONS
+        function updateStoppingAnalysis() {
+            const maxGames = parseInt(document.getElementById('maxGames').value) || 20;
+            const currentGame = parseInt(document.getElementById('currentGame').value) || 1;
+            const gamesWithDeck = parseInt(document.getElementById('gamesWithDeck').value) || 1;
+            const currentWins = parseInt(document.getElementById('currentWins').value) || 0;
+            const currentSessionPoints = parseInt(document.getElementById('currentSessionPoints').value) || 0;
+            const currentWinStreak = parseInt(document.getElementById('currentWinStreak').value) || 0;
+            const expectedWinRate = parseInt(document.getElementById('expectedWinRate').value) / 100 || 0.6;
+            const metaStability = document.getElementById('metaStability').value;
+            const switchCost = document.getElementById('switchCost').value;
+            
+            // Validation and auto-update max values
+            if (currentWins > gamesWithDeck) {
+                document.getElementById('currentWins').value = Math.min(currentWins, gamesWithDeck);
+                return;
+            }
+            
+            if (currentGame > maxGames) {
+                document.getElementById('currentGame').value = Math.min(currentGame, maxGames);
+                return;
+            }
+            
+            // Update current game max attribute dynamically
+            document.getElementById('currentGame').setAttribute('max', maxGames);
+            
+            const gamesRemaining = maxGames - currentGame;
+            const currentWinRate = gamesWithDeck > 0 ? (currentWins / gamesWithDeck) : 0;
+            const sessionProgress = currentGame / maxGames;
+            
+            // Calculate session status
+            updateSessionStatus(currentGame, maxGames, currentSessionPoints, currentWinStreak, gamesRemaining);
+            
+            // Calculate switching threshold
+            const threshold = calculateSwitchThreshold(gamesRemaining, sessionProgress, metaStability, switchCost, expectedWinRate);
+            
+            // Calculate expected values for continuing vs stopping
+            const expectedValueContinuing = calculateExpectedValue(expectedWinRate, gamesRemaining, currentWinStreak, currentSessionPoints);
+            const shouldStop = shouldStopPlaying(currentSessionPoints, expectedValueContinuing, gamesRemaining, currentWinStreak, maxGames);
+            
+            let deckRecommendation = '';
+            let sessionRecommendation = '';
+            let reasoning = '';
+            
+            // Deck switching logic
+            if (gamesWithDeck < 3 && currentWinRate < 0.3) {
+                deckRecommendation = '⚠️ EARLY SWITCH CONSIDERATION';
+            } else if (gamesRemaining <= 2) {
+                deckRecommendation = '✋ STAY WITH CURRENT DECK';
+            } else if (currentWinRate < threshold) {
+                deckRecommendation = '🔄 SWITCH DECK RECOMMENDED';
+            } else {
+                deckRecommendation = '✅ STAY WITH CURRENT DECK';
+            }
+            
+            // Session stopping logic
+            if (shouldStop.stop) {
+                sessionRecommendation = '🛑 STOP PLAYING';
+                reasoning = shouldStop.reason;
+            } else {
+                sessionRecommendation = '▶️ CONTINUE PLAYING';
+                reasoning = shouldStop.reason;
+            }
+            
+            const overallRecommendation = shouldStop.stop ? sessionRecommendation : `${deckRecommendation} • ${sessionRecommendation}`;
+            
+            document.getElementById('stoppingStatus').textContent = overallRecommendation;
+            document.getElementById('stoppingStatus').style.color = shouldStop.stop ? '#dc2626' : (deckRecommendation.includes('SWITCH') ? '#ed8936' : '#16a34a');
+            
+            document.getElementById('stoppingDetails').innerHTML = `
+                <p><strong>Current Win Rate:</strong> ${Math.round(currentWinRate * 100)}% (${currentWins}/${gamesWithDeck}) | 
+                <strong>Games Remaining:</strong> ${gamesRemaining}/${maxGames} | 
+                <strong>Session Progress:</strong> ${Math.round(sessionProgress * 100)}%</p>
+                <p><strong>Reasoning:</strong> ${reasoning}</p>
+            `;
+            
+            // Analysis details
+            document.getElementById('stoppingAnalysis').innerHTML = `
+                <p><strong>Deck Switching Analysis:</strong></p>
+                <ul>
+                    <li><strong>Switching Threshold:</strong> ${Math.round(threshold * 100)}% win rate</li>
+                    <li><strong>Sample Size:</strong> ${gamesWithDeck} games ${gamesWithDeck < 4 ? '(limited data)' : '(reliable data)'}</li>
+                    <li><strong>Meta Stability:</strong> ${metaStability} environment</li>
+                    <li><strong>Switch Cost:</strong> ${switchCost} difficulty</li>
+                    <li><strong>Expected Win Rate:</strong> ${Math.round(expectedWinRate * 100)}% with optimal deck</li>
+                    <li><strong>Session Length:</strong> ${maxGames} games planned</li>
+                </ul>
+            `;
+            
+            // Expected value analysis
+            document.getElementById('expectedValueAnalysis').innerHTML = `
+                <p><strong>Expected Value Analysis:</strong></p>
+                <ul>
+                    <li><strong>Expected Points from Continuing:</strong> ${expectedValueContinuing.toFixed(1)} points</li>
+                    <li><strong>Risk Assessment:</strong> ${assessRisk(currentSessionPoints, expectedValueContinuing, gamesRemaining)}</li>
+                    <li><strong>Win Streak Value:</strong> ${getWinStreakValue(currentWinStreak)} points per win</li>
+                    <li><strong>Optimal Strategy:</strong> ${getOptimalStrategy(currentSessionPoints, expectedValueContinuing, currentWinStreak, gamesRemaining, maxGames)}</li>
+                </ul>
+            `;
+        }
+        
+        function calculateSwitchThreshold(gamesRemaining, sessionProgress, metaStability, switchCost, expectedWinRate) {
+            const metaFactors = { 'stable': 1.0, 'mixed': 0.95, 'volatile': 0.9 };
+            const costFactors = { 'low': 1.0, 'medium': 0.95, 'high': 0.9 };
+            
+            const baseThreshold = expectedWinRate * 0.75;
+            const timeAdjustment = sessionProgress * 0.15;
+            const gameAdjustment = Math.max(0, (5 - gamesRemaining) * 0.05);
+            
+            return (baseThreshold + timeAdjustment + gameAdjustment) * metaFactors[metaStability] * costFactors[switchCost];
+        }
+        
+        function updateSessionStatus(currentGame, maxGames, currentSessionPoints, currentWinStreak, gamesRemaining) {
+            const statusContainer = document.getElementById('sessionStatus');
+            
+            const pointsColor = currentSessionPoints >= 0 ? '#16a34a' : '#dc2626';
+            const streakColor = currentWinStreak >= 3 ? '#16a34a' : (currentWinStreak >= 1 ? '#ed8936' : '#6b7280');
+            
+            statusContainer.innerHTML = `
+                <div style="background: white; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid ${pointsColor};">
+                    <div style="font-size: 1.4em; font-weight: bold; color: ${pointsColor};">${currentSessionPoints}</div>
+                    <div style="font-size: 0.9em; color: #666;">Session Points</div>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid ${streakColor};">
+                    <div style="font-size: 1.4em; font-weight: bold; color: ${streakColor};">${currentWinStreak}</div>
+                    <div style="font-size: 0.9em; color: #666;">Win Streak</div>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #4299e1;">
+                    <div style="font-size: 1.4em; font-weight: bold; color: #4299e1;">${currentGame}/${maxGames}</div>
+                    <div style="font-size: 0.9em; color: #666;">Games Played</div>
+                </div>
+                <div style="background: white; padding: 15px; border-radius: 8px; text-align: center; border-left: 4px solid #9333ea;">
+                    <div style="font-size: 1.4em; font-weight: bold; color: #9333ea;">${getWinStreakValue(currentWinStreak)}</div>
+                    <div style="font-size: 0.9em; color: #666;">Points/Win</div>
+                </div>
+            `;
+        }
+        
+        function getWinStreakValue(streak) {
+            if (streak === 0) return 10; // Base win value
+            if (streak === 1) return 13; // 2-win streak
+            if (streak === 2) return 16; // 3-win streak  
+            if (streak === 3) return 19; // 4-win streak
+            return 22; // 5+ win streak
+        }
+        
+        function calculateExpectedValue(winRate, gamesRemaining, currentStreak, currentPoints) {
+            if (gamesRemaining <= 0) return 0;
+            
+            let expectedValue = 0;
+            const scenarios = [];
+            
+            // Calculate expected value using dynamic programming approach
+            // This is a simplified calculation that considers immediate next games
+            for (let game = 1; game <= Math.min(gamesRemaining, 5); game++) {
+                const winProb = Math.pow(winRate, game) * Math.pow(1 - winRate, 0); // All wins
+                const lossProb = winRate * Math.pow(1 - winRate, 1); // One loss
+                
+                // Calculate points for winning streak scenarios
+                let streakPoints = 0;
+                for (let i = 0; i < game; i++) {
+                    const newStreak = currentStreak + i + 1;
+                    streakPoints += getWinStreakValue(Math.min(newStreak - 1, 4));
+                }
+                
+                expectedValue += winProb * streakPoints;
+                expectedValue += lossProb * (getWinStreakValue(currentStreak) - 7); // Win then loss
+            }
+            
+            // Add penalty for losses
+            expectedValue += (1 - winRate) * (-7);
+            
+            return expectedValue;
+        }
+        
+        function shouldStopPlaying(currentPoints, expectedValue, gamesRemaining, winStreak, maxGames) {
+            // Risk thresholds based on current situation
+            const isPositive = currentPoints > 0;
+            const hasGoodStreak = winStreak >= 3;
+            const lowGamesRemaining = gamesRemaining <= Math.max(2, Math.floor(maxGames * 0.15)); // Last 15% of session
+            const sessionProgress = (maxGames - gamesRemaining) / maxGames;
+            
+            // Adaptive thresholds based on session length
+            const highPointsThreshold = Math.max(30, maxGames * 2.5); // Scale with session length
+            const lowPointsThreshold = Math.min(-30, -maxGames * 1.5); // Scale with session length
+            
+            // Conservative stopping conditions
+            if (currentPoints >= highPointsThreshold && expectedValue < 5) {
+                return { stop: true, reason: 'High points secured, low expected value from continuing' };
+            }
+            
+            if (currentPoints >= 20 && sessionProgress > 0.8 && expectedValue < 0) {
+                return { stop: true, reason: 'Late session with good points, negative expected value ahead' };
+            }
+            
+            if (currentPoints <= lowPointsThreshold && expectedValue < maxGames * 0.5) {
+                return { stop: true, reason: 'Deep negative, insufficient expected recovery' };
+            }
+            
+            if (lowGamesRemaining && currentPoints > 0 && expectedValue < currentPoints * 0.1) {
+                return { stop: true, reason: 'Few games left, protect current gains' };
+            }
+            
+            // Continue playing conditions
+            if (hasGoodStreak && expectedValue > 15) {
+                return { stop: false, reason: 'Strong win streak with high expected value' };
+            }
+            
+            if (currentPoints < 0 && expectedValue > 20 && gamesRemaining > maxGames * 0.3) {
+                return { stop: false, reason: 'Recovery opportunity with high expected value' };
+            }
+            
+            if (gamesRemaining > maxGames * 0.5 && expectedValue > 5) {
+                return { stop: false, reason: 'Plenty of games left with positive expected value' };
+            }
+            
+            return { stop: false, reason: 'Moderate expected value, continue playing' };
+        }
+        
+        function assessRisk(currentPoints, expectedValue, gamesRemaining) {
+            const riskScore = Math.abs(currentPoints) / 10 + (1 - gamesRemaining / 20) * 0.5;
+            
+            if (riskScore < 0.3) return 'Low risk - safe to continue';
+            if (riskScore < 0.6) return 'Moderate risk - consider position carefully';
+            return 'High risk - consider stopping soon';
+        }
+        
+        function getOptimalStrategy(currentPoints, expectedValue, winStreak, gamesRemaining, maxGames) {
+            const sessionProgress = (maxGames - gamesRemaining) / maxGames;
+            
+            if (winStreak >= 4) return 'Ride the hot streak but be ready to stop';
+            if (currentPoints >= maxGames * 2) return 'Conservative play to protect gains';
+            if (currentPoints <= -maxGames) return 'Aggressive recovery or strategic stop';
+            if (sessionProgress > 0.8) return 'End-game optimization mode';
+            if (sessionProgress < 0.3) return 'Early session - establish position';
+            return 'Balanced risk-reward approach';
+        }
+        
+        function recordWin() {
+            const maxGames = parseInt(document.getElementById('maxGames').value) || 20;
+            const currentGame = parseInt(document.getElementById('currentGame').value) || 1;
+            const currentPoints = parseInt(document.getElementById('currentSessionPoints').value) || 0;
+            const currentStreak = parseInt(document.getElementById('currentWinStreak').value) || 0;
+            const gamesWithDeck = parseInt(document.getElementById('gamesWithDeck').value) || 1;
+            const currentWins = parseInt(document.getElementById('currentWins').value) || 0;
+            
+            // Check if session is complete
+            if (currentGame >= maxGames) {
+                alert(`Session complete! You've reached ${maxGames} games.`);
+                return;
+            }
+            
+            const newStreak = currentStreak + 1;
+            const pointsForWin = getWinStreakValue(currentStreak);
+            
+            document.getElementById('currentGame').value = currentGame + 1;
+            document.getElementById('currentSessionPoints').value = currentPoints + pointsForWin;
+            document.getElementById('currentWinStreak').value = newStreak;
+            document.getElementById('gamesWithDeck').value = gamesWithDeck + 1;
+            document.getElementById('currentWins').value = currentWins + 1;
+            
+            updateStoppingAnalysis();
+        }
+        
+        function recordLoss() {
+            const maxGames = parseInt(document.getElementById('maxGames').value) || 20;
+            const currentGame = parseInt(document.getElementById('currentGame').value) || 1;
+            const currentPoints = parseInt(document.getElementById('currentSessionPoints').value) || 0;
+            const gamesWithDeck = parseInt(document.getElementById('gamesWithDeck').value) || 1;
+            
+            // Check if session is complete
+            if (currentGame >= maxGames) {
+                alert(`Session complete! You've reached ${maxGames} games.`);
+                return;
+            }
+            
+            document.getElementById('currentGame').value = currentGame + 1;
+            document.getElementById('currentSessionPoints').value = currentPoints - 7;
+            document.getElementById('currentWinStreak').value = 0;
+            document.getElementById('gamesWithDeck').value = gamesWithDeck + 1;
+            
+            updateStoppingAnalysis();
+        }
+        
+        function resetSession() {
+            document.getElementById('currentGame').value = 1;
+            document.getElementById('currentSessionPoints').value = 0;
+            document.getElementById('currentWinStreak').value = 0;
+            document.getElementById('gamesWithDeck').value = 1;
+            document.getElementById('currentWins').value = 0;
+            // Keep maxGames setting - don't reset it
+            
+            updateStoppingAnalysis();
+        }
+        
+        // DECK SELECTOR FUNCTIONS
+        function initializeMatchupCounters() {
+            const tracker = document.getElementById('matchupTracker');
+            tracker.innerHTML = '';
+            
+            Object.keys(getCurrentDecks()).forEach(deckName => {
+                if (matchupCounts[deckName] === undefined) {
+                    matchupCounts[deckName] = 0;
+                }
+                
+                const counterDiv = document.createElement('div');
+                counterDiv.className = 'deck-counter';
+                counterDiv.innerHTML = `
+                    <div class="deck-name">${deckName}</div>
+                    <div class="counter-controls">
+                        <button class="counter-btn" onclick="decrementCounter('${deckName}')">-</button>
+                        <span class="counter-value" id="counter-${deckName}">${matchupCounts[deckName]}</span>
+                        <button class="counter-btn" onclick="incrementCounter('${deckName}')">+</button>
+                    </div>
+                `;
+                tracker.appendChild(counterDiv);
+            });
+        }
+        
+        function incrementCounter(deckName) {
+            matchupCounts[deckName]++;
+            document.getElementById(`counter-${deckName}`).textContent = matchupCounts[deckName];
+            autoSaveData(); // Auto-save on data change
+        }
+        
+        function decrementCounter(deckName) {
+            if (matchupCounts[deckName] > 0) {
+                matchupCounts[deckName]--;
+                document.getElementById(`counter-${deckName}`).textContent = matchupCounts[deckName];
+                autoSaveData(); // Auto-save on data change
+            }
+        }
+        
+        function resetCounters() {
+            Object.keys(matchupCounts).forEach(deckName => {
+                matchupCounts[deckName] = 0;
+                const counter = document.getElementById(`counter-${deckName}`);
+                if (counter) counter.textContent = 0;
+            });
+            document.getElementById('recommendationSection').style.display = 'none';
+            autoSaveData(); // Auto-save on data change
+        }
+        
+        function analyzeMatchups() {
+            const totalGames = Object.values(matchupCounts).reduce((a, b) => a + b, 0);
+            
+            if (totalGames === 0) {
+                alert('Please track some matchups first!');
+                return;
+            }
+            
+            // Calculate expected win rates for each deck
+            const deckScores = {};
+            const currentDecks = getCurrentDecks();
+            const currentMatrix = getCurrentMatrix();
+            
+            Object.keys(currentDecks).forEach(ourDeck => {
+                let expectedWinRate = 0;
+                let weightedGames = 0;
+                
+                Object.keys(matchupCounts).forEach(opponentDeck => {
+                    const games = matchupCounts[opponentDeck];
+                    if (games > 0 && currentMatrix[ourDeck] && currentMatrix[ourDeck][opponentDeck] !== undefined) {
+                        const winRate = currentMatrix[ourDeck][opponentDeck] / 100;
+                        expectedWinRate += winRate * games;
+                        weightedGames += games;
+                    }
+                });
+                
+                deckScores[ourDeck] = weightedGames > 0 ? expectedWinRate / weightedGames : 0;
+            });
+            
+            // Sort decks by score
+            const sortedDecks = Object.entries(deckScores)
+                .sort(([,a], [,b]) => b - a)
+                .map(([deck, score]) => ({ deck, score }));
+            
+            displayRecommendations(sortedDecks, totalGames);
+        }
+        
+        function displayRecommendations(sortedDecks, totalGames) {
+            const content = document.getElementById('recommendationContent');
+            const section = document.getElementById('recommendationSection');
+            
+            let html = `<p><strong>Based on ${totalGames} matchups tracked today:</strong></p>`;
+            html += '<div class="deck-recommendations">';
+            
+            sortedDecks.forEach((item, index) => {
+                const percentage = (item.score * 100).toFixed(1);
+                let className = 'deck-recommendation';
+                let rankText = '';
+                
+                if (index === 0) {
+                    className += ' best';
+                    rankText = '🥇 BEST CHOICE';
+                } else if (index === 1) {
+                    className += ' good';
+                    rankText = '🥈 STRONG OPTION';
+                } else if (index === 2) {
+                    className += ' good';
+                    rankText = '🥉 GOOD OPTION';
+                } else if (percentage >= 55) {
+                    className += ' okay';
+                    rankText = '✅ VIABLE';
+                } else {
+                    className += ' poor';
+                    rankText = '❌ AVOID';
+                }
+                
+                html += `
+                    <div class="${className}">
+                        <div class="deck-rec-name">${item.deck}</div>
+                        <div class="deck-rec-score">${percentage}% Expected Win Rate</div>
+                        <div style="font-size: 0.9em; color: #666;">${rankText}</div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            content.innerHTML = html;
+            section.style.display = 'block';
+        }
+        
+        function initializeMatrix() {
+            const table = document.getElementById('matchupMatrix');
+            const currentDecks = getCurrentDecks();
+            const currentMatrix = getCurrentMatrix();
+            
+            let html = '<thead><tr><th style="font-size: 10px;">Your Deck vs Opponent</th>';
+            
+            // Header row
+            Object.keys(currentDecks).forEach(deck => {
+                html += `<th style="writing-mode: vertical-rl; text-orientation: mixed; font-size: 9px;">${deck.split(' ')[0]}</th>`;
+            });
+            html += '</tr></thead><tbody>';
+            
+            // Data rows
+            Object.keys(currentDecks).forEach(ourDeck => {
+                html += `<tr><th style="font-size: 10px;">${ourDeck}</th>`;
+                Object.keys(currentDecks).forEach(oppDeck => {
+                    const winRate = currentMatrix[ourDeck] ? (currentMatrix[ourDeck][oppDeck] || 50) : 50;
+                    let className = '';
+                    if (winRate >= 60) className = 'favorable';
+                    else if (winRate >= 41) className = 'even';
+                    else className = 'unfavorable';
+                    
+                    if (editMode) {
+                        className += ' editable';
+                        html += `<td class="${className}" onclick="editMatchup('${ourDeck}', '${oppDeck}', this)">${winRate}%</td>`;
+                    } else {
+                        html += `<td class="${className}">${winRate}%</td>`;
+                    }
+                });
+                html += '</tr>';
+            });
+            
+            html += '</tbody>';
+            table.innerHTML = html;
+        }
+        
+        function toggleEditMode() {
+            editMode = !editMode;
+            const editControls = document.getElementById('editControls');
+            const deckEditor = document.getElementById('deckEditor');
+            const instructions = document.getElementById('matrixMode');
+            
+            editControls.style.display = editMode ? 'block' : 'none';
+            deckEditor.style.display = editMode ? 'block' : 'none';
+            instructions.textContent = editMode ? 
+                '✏️ Edit mode: Click any percentage to modify matchups' : 
+                'View matchup percentages';
+            
+            if (editMode) {
+                populateDeckEditor();
+            }
+            
+            initializeMatrix();
+        }
+        
+        function populateDeckEditor() {
+            const container = document.getElementById('deckList');
+            container.innerHTML = '';
+            
+            Object.keys(getCurrentDecks()).forEach(name => {
+                const item = document.createElement('div');
+                item.className = 'deck-item';
+                item.innerHTML = `
+                    <input type="text" value="${name}" onchange="updateDeckName('${name}', this.value)" style="flex: 1;">
+                    <span style="color: #666; font-size: 12px; padding: 6px;">Fixed deck - cannot remove</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+        
+        function updateDeckName(oldName, newName) {
+            if (oldName === newName) return;
+            
+            const currentDecks = getCurrentDecks();
+            if (currentDecks[oldName] && !currentDecks[newName]) {
+                if (!customDecks) customDecks = {...currentDecks};
+                if (!customMatrix) customMatrix = JSON.parse(JSON.stringify(getCurrentMatrix()));
+                
+                // Update decks
+                customDecks[newName] = customDecks[oldName];
+                delete customDecks[oldName];
+                
+                // Update matrix
+                customMatrix[newName] = customMatrix[oldName];
+                delete customMatrix[oldName];
+                
+                Object.keys(customMatrix).forEach(deck => {
+                    if (customMatrix[deck][oldName] !== undefined) {
+                        customMatrix[deck][newName] = customMatrix[deck][oldName];
+                        delete customMatrix[deck][oldName];
+                    }
+                });
+                
+                // Update matchup counts
+                if (matchupCounts[oldName] !== undefined) {
+                    matchupCounts[newName] = matchupCounts[oldName];
+                    delete matchupCounts[oldName];
+                }
+                
+                initializeMatchupCounters();
+                initializeMatrix();
+                updateDataSourceDisplay();
+                populateDeckEditor();
+            }
+        }
+        
+        function addNewDeck() {
+            const name = prompt('Enter deck name:');
+            if (!name || name.trim() === '') return;
+            
+            const trimmedName = name.trim();
+            
+            if (getCurrentDecks()[trimmedName]) {
+                alert('A deck with this name already exists!');
+                return;
+            }
+            
+            if (!customDecks) customDecks = {...getCurrentDecks()};
+            if (!customMatrix) customMatrix = JSON.parse(JSON.stringify(getCurrentMatrix()));
+            
+            customDecks[trimmedName] = { color: '#4299e1' };
+            customMatrix[trimmedName] = {};
+            
+            // Set matchups for the new deck
+            Object.keys(customDecks).forEach(existingDeck => {
+                customMatrix[trimmedName][existingDeck] = existingDeck === trimmedName ? 50 : 50;
+                if (!customMatrix[existingDeck]) customMatrix[existingDeck] = {};
+                customMatrix[existingDeck][trimmedName] = existingDeck === trimmedName ? 50 : 50;
+            });
+            
+            matchupCounts[trimmedName] = 0;
+            
+            initializeMatchupCounters();
+            initializeMatrix();
+            updateDataSourceDisplay();
+            populateDeckEditor();
+            
+            alert(`Successfully added "${trimmedName}" to the deck list!`);
+        }
+        
+        function editMatchup(ourDeck, oppDeck, cell) {
+            if (!editMode) return;
+            
+            const currentValue = getCurrentMatrix()[ourDeck][oppDeck];
+            const input = document.createElement('input');
+            input.type = 'number';
+            input.min = '0';
+            input.max = '100';
+            input.value = currentValue;
+            input.style.width = '40px';
+            input.style.textAlign = 'center';
+            
+            input.onblur = input.onchange = function() {
+                const newValue = Math.max(0, Math.min(100, parseInt(this.value) || 50));
+                updateMatchupValue(ourDeck, oppDeck, newValue);
+                initializeMatrix();
+            };
+            
+            input.onkeydown = function(e) {
+                if (e.key === 'Enter') {
+                    this.blur();
+                }
+            };
+            
+            cell.innerHTML = '';
+            cell.appendChild(input);
+            input.focus();
+            input.select();
+        }
+        
+        function updateMatchupValue(ourDeck, oppDeck, value) {
+            if (!customMatrix) customMatrix = JSON.parse(JSON.stringify(getCurrentMatrix()));
+            customMatrix[ourDeck][oppDeck] = value;
+            updateDataSourceDisplay();
+        }
+        
+        function updateDataSourceDisplay() {
+            const dataSourceSpan = document.getElementById('dataSource');
+            if (customDecks || customMatrix) {
+                dataSourceSpan.textContent = '🟡 CUSTOM: Modified Data';
+                dataSourceSpan.style.color = '#ed8936';
+            } else {
+                dataSourceSpan.textContent = '🟢 DEFAULT: Built-in Data';
+                dataSourceSpan.style.color = '#16a34a';
+            }
+            
+            // Add auto-save indicator
+            try {
+                if (localStorage) {
+                    const indicator = document.getElementById('autoSaveIndicator') || createAutoSaveIndicator();
+                    indicator.textContent = '💾 AUTO-SAVE: ON';
+                    indicator.style.color = '#16a34a';
+                }
+            } catch(e) {
+                const indicator = document.getElementById('autoSaveIndicator') || createAutoSaveIndicator();
+                indicator.textContent = '📁 MANUAL ONLY';
+                indicator.style.color = '#ed8936';
+            }
+        }
+        
+        function createAutoSaveIndicator() {
+            const indicator = document.createElement('span');
+            indicator.id = 'autoSaveIndicator';
+            indicator.style.marginLeft = '15px';
+            indicator.style.fontSize = '12px';
+            indicator.style.fontWeight = 'bold';
+            document.getElementById('dataSource').parentNode.appendChild(indicator);
+            return indicator;
+        }
+        
+        function exportData() {
+            const dataToExport = {
+                version: '2.1',
+                exportDate: new Date().toISOString(),
+                customDecks: customDecks,
+                customMatrix: customMatrix,
+                matchupCounts: matchupCounts
+            };
+            
+            const dataStr = JSON.stringify(dataToExport, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(dataBlob);
+            link.download = `pokemon-deck-config-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            
+            showStatus('✅ Configuration exported successfully!', 'success');
+        }
+        
+        function importData() {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = function(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    try {
+                        const importedData = JSON.parse(e.target.result);
+                        
+                        if (!importedData.version || !importedData.exportDate) {
+                            throw new Error('Invalid export file format');
+                        }
+                        
+                        customDecks = importedData.customDecks || null;
+                        customMatrix = importedData.customMatrix || null;
+                        matchupCounts = importedData.matchupCounts || {};
+                        
+                        initializeMatchupCounters();
+                        initializeMatrix();
+                        updateDataSourceDisplay();
+                        if (editMode) populateDeckEditor();
+                        autoSaveData(); // Auto-save imported data
+                        
+                        showStatus(`✅ Configuration imported successfully from ${new Date(importedData.exportDate).toLocaleDateString()}!`, 'success');
+                        
+                    } catch (error) {
+                        alert(`Import failed: ${error.message}`);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
+        }
+        
+        function resetToDefaults() {
+            if (confirm('Reset all customizations to defaults? This will also clear auto-saved data.')) {
+                customDecks = null;
+                customMatrix = null;
+                matchupCounts = {};
+                clearAutoSavedData(); // Clear auto-saved data
+                initializeMatchupCounters();
+                initializeMatrix();
+                updateDataSourceDisplay();
+                if (editMode) populateDeckEditor();
+                document.getElementById('recommendationSection').style.display = 'none';
+                showStatus('✅ Reset to default configuration and cleared auto-saved data!', 'success');
+            }
+        }
+        
+        function showPersistenceInfo() {
+            let message = '';
+            try {
+                if (localStorage) {
+                    const saved = localStorage.getItem('pokemonTCG_toolkit');
+                    if (saved) {
+                        const data = JSON.parse(saved);
+                        message = `💾 AUTO-SAVE ACTIVE!\n\n✅ Your data is automatically saved:\n• Matchup counters\n• Custom deck names\n• Custom matchup percentages\n\n📅 Last auto-saved: ${new Date(data.autoSaveDate).toLocaleString()}\n\n🔄 Data persists between browser sessions.\n💡 You can still use Export/Import for sharing configs!`;
+                    } else {
+                        message = `💾 AUTO-SAVE READY!\n\n✅ localStorage is available.\n🔄 Your changes will be automatically saved.\n📱 Data will persist between browser sessions.\n\n💡 Make some changes and they'll be auto-saved!`;
+                    }
+                }
+            } catch(e) {
+                message = `📁 MANUAL PERSISTENCE MODE\n\n⚠️ Auto-save not available in this environment.\n🔧 Use Export/Import buttons to save your data.\n\n💡 When you deploy to GitHub Pages, auto-save will work automatically!`;
+            }
+            alert(message);
+        }
+        
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('dataStatus');
+            statusDiv.style.display = 'block';
+            statusDiv.style.background = type === 'success' ? '#f0fdf4' : '#fef2f2';
+            statusDiv.style.color = type === 'success' ? '#166534' : '#dc2626';
+            statusDiv.innerHTML = message;
+            
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 3000);
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Try to auto-load saved data first
+            const dataLoaded = autoLoadData();
+            if (dataLoaded) {
+                console.log('Auto-loaded saved configuration');
+            }
+            
+            updateStoppingAnalysis();
+            initializeMatchupCounters();
+            initializeMatrix();
+            updateDataSourceDisplay();
+        });
+    </script>
+</body>
+</html>
