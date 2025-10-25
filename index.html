@@ -365,7 +365,7 @@
     <div class="container">
         <h1>🎯 Pokemon TCG Pocket Strategy Toolkit</h1>
         <p class="subtitle">
-            <strong>Complete Competitive Analysis</strong> • Optimal Stopping Algorithm • Tournament Data Integration • Customizable Sessions
+            <strong>October 2025 Meta</strong> • Real Tournament Data • Optimal Stopping Algorithm • Customizable Analysis
         </p>
         
         <div class="quick-start">
@@ -558,83 +558,81 @@
     </div>
 
     <script>
-        // 12 Meta Decks for Pokemon TCG Pocket (Fixed List)
+        // 7 Meta Decks for Pokemon TCG Pocket (October 2025 Meta)
         const decks = {
-            'Pikachu ex': { color: '#FFD700' },
-            'Charizard ex': { color: '#FF6B35' },
-            'Mewtwo ex': { color: '#9D4EDD' },
-            'Starmie ex': { color: '#0077BE' },
-            'Articuno ex': { color: '#87CEEB' },
-            'Moltres ex': { color: '#DC143C' },
-            'Venusaur ex': { color: '#228B22' },
-            'Blastoise ex': { color: '#1E90FF' },
-            'Wigglytuff ex': { color: '#FFB6C1' },
-            'Machamp ex': { color: '#696969' },
-            'Gengar ex': { color: '#4B0082' },
-            'Alakazam ex': { color: '#DAA520' }
+            'Suicune ex Greninja': { color: '#0077BE' },
+            'Giratina ex Darkrai ex': { color: '#4B0082' },
+            'Guzzlord ex': { color: '#2D2D2D' },
+            'Flareon ex Eevee ex': { color: '#FF6B35' },
+            'Espeon ex Sylveon ex': { color: '#9D4EDD' },
+            'Darkrai ex Arceus ex': { color: '#1a1a1a' },
+            'Buzzwole ex Pheromosa': { color: '#DC143C' }
         };
         
-        // 12x12 Matchup Matrix
+        // 7x7 Matchup Matrix (October 2025 Meta - Real Tournament Data)
         const matchupMatrix = {
-            'Pikachu ex': {
-                'Pikachu ex': 50, 'Charizard ex': 45, 'Mewtwo ex': 35, 'Starmie ex': 65,
-                'Articuno ex': 60, 'Moltres ex': 55, 'Venusaur ex': 70, 'Blastoise ex': 40,
-                'Wigglytuff ex': 55, 'Machamp ex': 60, 'Gengar ex': 50, 'Alakazam ex': 45
+            'Suicune ex Greninja': {
+                'Suicune ex Greninja': 48.43,
+                'Giratina ex Darkrai ex': 43.18,
+                'Guzzlord ex': 45.08,
+                'Flareon ex Eevee ex': 56.40,
+                'Espeon ex Sylveon ex': 54.78,
+                'Darkrai ex Arceus ex': 54.57,
+                'Buzzwole ex Pheromosa': 72.28
             },
-            'Charizard ex': {
-                'Pikachu ex': 55, 'Charizard ex': 50, 'Mewtwo ex': 40, 'Starmie ex': 45,
-                'Articuno ex': 35, 'Moltres ex': 50, 'Venusaur ex': 75, 'Blastoise ex': 30,
-                'Wigglytuff ex': 65, 'Machamp ex': 50, 'Gengar ex': 55, 'Alakazam ex': 60
+            'Giratina ex Darkrai ex': {
+                'Suicune ex Greninja': 53.79,
+                'Giratina ex Darkrai ex': 48.38,
+                'Guzzlord ex': 55.03,
+                'Flareon ex Eevee ex': 38.17,
+                'Espeon ex Sylveon ex': 58.80,
+                'Darkrai ex Arceus ex': 43.56,
+                'Buzzwole ex Pheromosa': 41.84
             },
-            'Mewtwo ex': {
-                'Pikachu ex': 65, 'Charizard ex': 60, 'Mewtwo ex': 50, 'Starmie ex': 55,
-                'Articuno ex': 50, 'Moltres ex': 45, 'Venusaur ex': 40, 'Blastoise ex': 45,
-                'Wigglytuff ex': 70, 'Machamp ex': 75, 'Gengar ex': 45, 'Alakazam ex': 55
+            'Guzzlord ex': {
+                'Suicune ex Greninja': 51.70,
+                'Giratina ex Darkrai ex': 41.28,
+                'Guzzlord ex': 48.78,
+                'Flareon ex Eevee ex': 64.00,
+                'Espeon ex Sylveon ex': 79.31,
+                'Darkrai ex Arceus ex': 58.21,
+                'Buzzwole ex Pheromosa': 34.51
             },
-            'Starmie ex': {
-                'Pikachu ex': 35, 'Charizard ex': 70, 'Mewtwo ex': 45, 'Starmie ex': 50,
-                'Articuno ex': 45, 'Moltres ex': 75, 'Venusaur ex': 25, 'Blastoise ex': 50,
-                'Wigglytuff ex': 60, 'Machamp ex': 70, 'Gengar ex': 55, 'Alakazam ex': 50
+            'Flareon ex Eevee ex': {
+                'Suicune ex Greninja': 42.10,
+                'Giratina ex Darkrai ex': 59.95,
+                'Guzzlord ex': 33.78,
+                'Flareon ex Eevee ex': 49.12,
+                'Espeon ex Sylveon ex': 64.62,
+                'Darkrai ex Arceus ex': 46.15,
+                'Buzzwole ex Pheromosa': 55.84
             },
-            'Articuno ex': {
-                'Pikachu ex': 40, 'Charizard ex': 65, 'Mewtwo ex': 50, 'Starmie ex': 55,
-                'Articuno ex': 50, 'Moltres ex': 30, 'Venusaur ex': 70, 'Blastoise ex': 45,
-                'Wigglytuff ex': 55, 'Machamp ex': 60, 'Gengar ex': 50, 'Alakazam ex': 45
+            'Espeon ex Sylveon ex': {
+                'Suicune ex Greninja': 43.95,
+                'Giratina ex Darkrai ex': 40.77,
+                'Guzzlord ex': 20.69,
+                'Flareon ex Eevee ex': 35.38,
+                'Espeon ex Sylveon ex': 45.83,
+                'Darkrai ex Arceus ex': 32.56,
+                'Buzzwole ex Pheromosa': 52.27
             },
-            'Moltres ex': {
-                'Pikachu ex': 45, 'Charizard ex': 50, 'Mewtwo ex': 55, 'Starmie ex': 25,
-                'Articuno ex': 70, 'Moltres ex': 50, 'Venusaur ex': 80, 'Blastoise ex': 20,
-                'Wigglytuff ex': 60, 'Machamp ex': 55, 'Gengar ex': 50, 'Alakazam ex': 50
+            'Darkrai ex Arceus ex': {
+                'Suicune ex Greninja': 43.55,
+                'Giratina ex Darkrai ex': 53.33,
+                'Guzzlord ex': 38.06,
+                'Flareon ex Eevee ex': 50.00,
+                'Espeon ex Sylveon ex': 67.44,
+                'Darkrai ex Arceus ex': 50.00,
+                'Buzzwole ex Pheromosa': 33.33
             },
-            'Venusaur ex': {
-                'Pikachu ex': 30, 'Charizard ex': 25, 'Mewtwo ex': 60, 'Starmie ex': 75,
-                'Articuno ex': 30, 'Moltres ex': 20, 'Venusaur ex': 50, 'Blastoise ex': 70,
-                'Wigglytuff ex': 65, 'Machamp ex': 55, 'Gengar ex': 60, 'Alakazam ex': 55
-            },
-            'Blastoise ex': {
-                'Pikachu ex': 60, 'Charizard ex': 70, 'Mewtwo ex': 55, 'Starmie ex': 50,
-                'Articuno ex': 55, 'Moltres ex': 80, 'Venusaur ex': 30, 'Blastoise ex': 50,
-                'Wigglytuff ex': 50, 'Machamp ex': 45, 'Gengar ex': 45, 'Alakazam ex': 50
-            },
-            'Wigglytuff ex': {
-                'Pikachu ex': 45, 'Charizard ex': 35, 'Mewtwo ex': 30, 'Starmie ex': 40,
-                'Articuno ex': 45, 'Moltres ex': 40, 'Venusaur ex': 35, 'Blastoise ex': 50,
-                'Wigglytuff ex': 50, 'Machamp ex': 25, 'Gengar ex': 60, 'Alakazam ex': 65
-            },
-            'Machamp ex': {
-                'Pikachu ex': 40, 'Charizard ex': 50, 'Mewtwo ex': 25, 'Starmie ex': 30,
-                'Articuno ex': 40, 'Moltres ex': 45, 'Venusaur ex': 45, 'Blastoise ex': 55,
-                'Wigglytuff ex': 75, 'Machamp ex': 50, 'Gengar ex': 35, 'Alakazam ex': 70
-            },
-            'Gengar ex': {
-                'Pikachu ex': 50, 'Charizard ex': 45, 'Mewtwo ex': 55, 'Starmie ex': 45,
-                'Articuno ex': 50, 'Moltres ex': 50, 'Venusaur ex': 40, 'Blastoise ex': 55,
-                'Wigglytuff ex': 40, 'Machamp ex': 65, 'Gengar ex': 50, 'Alakazam ex': 60
-            },
-            'Alakazam ex': {
-                'Pikachu ex': 55, 'Charizard ex': 40, 'Mewtwo ex': 45, 'Starmie ex': 50,
-                'Articuno ex': 55, 'Moltres ex': 50, 'Venusaur ex': 45, 'Blastoise ex': 50,
-                'Wigglytuff ex': 35, 'Machamp ex': 30, 'Gengar ex': 40, 'Alakazam ex': 50
+            'Buzzwole ex Pheromosa': {
+                'Suicune ex Greninja': 26.22,
+                'Giratina ex Darkrai ex': 56.12,
+                'Guzzlord ex': 62.83,
+                'Flareon ex Eevee ex': 41.56,
+                'Espeon ex Sylveon ex': 43.18,
+                'Darkrai ex Arceus ex': 60.00,
+                'Buzzwole ex Pheromosa': 48.00
             }
         };
         
