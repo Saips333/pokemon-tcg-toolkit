@@ -13,6 +13,7 @@ Updated with real tournament matchup data for the current competitive meta:
 - Espeon ex Sylveon ex
 - Darkrai ex Arceus ex
 - Buzzwole ex Pheromosa
+- Tapu Koko ex Pikachu ex
 
 ### Tournament-Based Matchup Matrix
 Real win rate data compiled from competitive tournament results, providing accurate matchup percentages for optimal deck selection.
